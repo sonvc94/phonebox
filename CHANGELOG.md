@@ -8,6 +8,10 @@
   because the agent restarts, and says so while the update runs.
 
 **Agent**
+- Dictation and Type-text shortcuts on macOS type accented and non-Latin text as it is. They went through System
+  Events' `keystroke`, which only types what the keyboard layout has keys for: on a U.S. layout "Mấy giờ rồi" arrived
+  as "May gia rai". The agent now posts Unicode keyboard events, one character at a time; the Accessibility
+  permission is the same.
 - Claude quotas on macOS: a `~/.claude/.credentials.json` left behind by another tool or an older Claude Code no
   longer hides the sign-in Claude Code renews in the Keychain. Once the file's token is missing or expired, the agent
   reads the Keychain too and uses the sign-in that expires later, instead of showing "Token expired" for good (#277,

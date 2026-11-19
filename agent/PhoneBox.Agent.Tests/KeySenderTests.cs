@@ -81,3 +81,28 @@ public class KeySenderTests
         Assert.Equal(extended, KeySender.WinExtended(key));
     }
 }
+
+public class MacTypingTests
+{
+    [Fact]
+    public void VietnameseGoesOneCharacterAtATime() =>
+        Assert.Equal(["M", "ấ", "y", " ", "g", "i", "ờ"], MacTyping.Units("Mấy giờ"));
+
+    [Fact]
+    public void NoEventCarriesHalfACharacter()
+    {
+        // an emoji is two UTF-16 units; a decomposed "ấ" is a + two combining marks: each must stay one event
+        var decomposed = "ấ";
+        Assert.Equal(["😀", decomposed, "!"], MacTyping.Units("😀" + decomposed + "!"));
+    }
+
+    [Fact]
+    public void TypesTheTextAsGiven()
+    {
+        var typed = new List<string>();
+        MacTyping.TestSink = typed.Add;
+        try { MacTyping.Type("Mấy giờ rồi?", CancellationToken.None); }
+        finally { MacTyping.TestSink = null; }
+        Assert.Equal("Mấy giờ rồi?", string.Concat(typed));
+    }
+}

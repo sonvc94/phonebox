@@ -319,8 +319,8 @@ public static class KeySender
         }
         if (OperatingSystem.IsMacOS())
         {
-            if (!Run("osascript", "-e", $"tell application \"System Events\" to keystroke \"{text.Replace("\\", "\\\\").Replace("\"", "\\\"")}\""))
-                throw new InvalidOperationException(AccessibilityHint);
+            // Unicode events, not System Events' keystroke: that one types only what the keyboard layout has keys for
+            MacTyping.Type(text, ct);
             return true;
         }
         if (Sh.Which("xdotool") is not null && Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is null) return Run("xdotool", "type", "--delay", "8", "--", text);
